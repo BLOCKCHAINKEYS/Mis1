@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en" class="bq-v5 bq-v6">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#1b1515">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="apple-touch-icon" href="assets/icon-192.png">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'; worker-src 'self'; manifest-src 'self'">
+  <meta name="description" content="Burger Quest: a free, offline-capable 3D burger restaurant tycoon. Grill, stack orders, earn tips and grow five food businesses on mobile or desktop.">
+  <title>Burger Quest 6 — Restaurant Empire</title>
+  <link rel="icon" type="image/svg+xml" href="assets/icon.svg">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="hud.css">
+  <link rel="stylesheet" href="release.css">
+  <script defer src="restaurant3d.js"></script>
+  <script defer src="game.js"></script>
+  <script defer src="hud.js"></script>
+  <script defer src="release.js"></script>
+</head>
+<body>
+ <div class="app-shell">
+  <header class="topbar">
+   <div class="brand"><div class="brand-mark" aria-hidden="true"><span class="brand-seed">✦</span><span class="brand-bun">B</span></div><div><div class="brand-name">BURGER <b>QUEST</b></div><div class="brand-sub">FROM THE GRILL TO THE SKYLINE</div></div></div>
+   <div class="top-stats" aria-label="Business statistics">
+    <div class="stat"><span class="stat-label">CASH</span><strong id="cashStat">$180</strong></div>
+    <div class="stat"><span class="stat-label">REPUTATION</span><strong id="repStat">★★★☆☆</strong></div>
+    <div class="stat"><span class="stat-label">BURGERS SOLD</span><strong id="servedStat">0</strong></div>
+    <div class="stat"><span class="stat-label">BUSINESS DAY</span><strong id="dayStat">01</strong></div>
+   </div>
+   <div class="top-actions"><button id="soundButton" class="icon-button" aria-label="Toggle sound" title="Toggle sound">♪</button><button id="helpButton" class="icon-button" aria-label="How to play" title="How to play">?</button><button id="menuButton" class="button subdued small">SAVE / MENU</button></div>
+  </header>
+
+  <section class="venue-strip" aria-label="Current location">
+   <div class="venue-skyline" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+   <div class="venue-copy"><span class="eyebrow">NOW SERVING AT</span><h1 id="venueTitle">THE CORNER CART</h1><p id="venueSubtitle">Every empire starts with one perfect burger.</p></div>
+   <div class="shift-controls"><div class="shift-timer"><span class="shift-status" id="shiftStatus">CLOSED · READY TO OPEN</span><strong id="timerText">01:45</strong><span class="shift-progress"><span id="shiftBar"></span></span></div><button id="shiftButton" class="button primary">OPEN FOR BUSINESS</button><button id="pauseButton" class="button secondary" hidden>PAUSE</button></div>
+  </section>
+
+  <div class="game-layout">
+   <aside class="panel order-panel" id="orderPanel">
+    <div class="panel-heading"><div><span class="eyebrow">CUSTOMER SERVICE</span><h2>THE ORDER RAIL</h2></div><span id="queueCount" class="count-badge">0 / 3</span></div>
+    <div id="queue" class="order-list"><div class="empty-state">Open your stand to welcome your first customer.</div></div>
+    <div class="tip-box"><strong>THE HOUSE RULE</strong><p>Match every ingredient on a ticket. More accurate orders and faster service mean better tips.</p></div>
+    <div class="mini-stats"><div><span>DAY REVENUE</span><strong id="dayRevenue">$0</strong></div><div><span>COMBO STREAK</span><strong id="streakStat">0</strong></div></div>
+    <div class="quest-card"><span class="eyebrow">YOUR NEXT QUEST</span><strong id="questTitle">THE FIRST EXPANSION</strong><p id="questDetail">Sell burgers and save to open your next stand.</p><div class="quest-progress"><span id="questProgress"></span></div></div>
+   </aside>
+
+   <main class="kitchen-panel restaurant-edition">
+    <section class="station grill-station" id="grillPanel">
+     <div class="station-heading"><div><span class="eyebrow">STATION 01 / THE FIRE</span><h2>HOT OFF THE GRILL</h2></div><div class="hold-count">READY PATTIES <b id="cookedCount">0</b></div></div>
+     <div class="chef-heat-controls"><div class="heat-control-head"><label for="heatRange">GRIDDLE TEMPERATURE <b id="heatValue">425°F</b></label><span id="searReadout">SEAR ZONE · BALANCED</span></div><input id="heatRange" type="range" min="325" max="550" value="425" step="25" aria-label="Griddle temperature Fahrenheit"><div class="grease-controls"><div class="grease-status"><small>GREASE BUILDUP</small><b id="greaseValue">0%</b><div class="grease-track"><span id="greaseFill"></span></div></div><button class="button subdued small" type="button" id="cleanGrill">SCRAPE CLEAN</button></div></div><div id="grillSlots" class="grill-slots"></div>
+     <div class="grill-footer"><button id="addPatty" class="button heat">+ DROP RAW PATTY <span id="rawCounter">(15 IN STOCK)</span></button><span class="inline-hint">Tap a patty to flip it, then collect when ready. Don't let it burn.</span></div>
+    </section>
+
+    <section class="station assemble-station">
+     <div class="station-heading"><div><span class="eyebrow">STATION 02 / THE ART</span><h2>BUILD THAT BEAUTY</h2></div><span id="buildStatus" class="status-tag">EMPTY BOARD</span></div>
+     <div class="lab-control-bar" aria-label="3D burger display settings"><div class="lab-mode"><button data-3d-mode="showcase" aria-pressed="true" type="button">SHOWCASE BURGER</button><button data-3d-mode="build" aria-pressed="false" type="button">CUSTOMER BUILD</button></div><button id="reset3D" type="button" class="lab-reset">RESET VIEW ↻</button></div>
+     <div class="camera-toolbar" aria-label="3D camera presets"><span class="live-flag"><span class="live-led"></span> RESTAURANT SIMULATION</span><button type="button" data-camera="kitchen" aria-pressed="false">KITCHEN</button><button type="button" data-camera="hero" aria-pressed="true">FOOD CAMERA</button><button type="button" data-camera="macro" aria-pressed="false">MACRO</button><button type="button" data-camera="exploded" aria-pressed="false">EXPLODED</button><button type="button" id="spinButton" aria-pressed="false">TURNTABLE: OFF</button><button type="button" id="fxButton" aria-pressed="true">FX: HIGH</button></div>
+     <div class="assembly-area"><div class="assembly-backdrop" id="burgerStage"><div class="viewport-hud" aria-hidden="true"><span class="hud-eyebrow">CHEF CAM / INTERACTIVE 3D</span><strong>BURGER QUEST <em>CHEF PHYSICS EDITION</em></strong><small>TEXTURED · DRAG-TO-STACK · DYNAMIC SEAR · GRIDDLE FX</small></div><span class="backdrop-word">JUICY</span><div id="labEmptyMessage" hidden>START A FRESH BUN TO BUILD IN 3D</div><canvas id="burger3D" aria-label="Interactive 3D burger. Drag to rotate and pinch to zoom." role="img"></canvas><canvas id="burgerCanvas" width="620" height="380" aria-label="Fallback two dimensional burger" role="img" hidden></canvas><div id="dragDock" class="drag-dock" aria-label="Drag food from this shelf onto the 3D burger"></div><span id="engineBadge" class="lab-3d-badge">3D INITIALIZING</span><span class="counter-shadow"></span></div><div class="assembly-side"><div class="build-title">ON YOUR BOARD</div><div id="buildList" class="build-list">Start with a toasted bun.</div><div class="action-stack"><button id="startBurger" class="button primary">START A FRESH BUN</button><button id="serveBurger" class="button success" disabled>SERVE THIS BURGER →</button><div class="utility-row"><button id="undoBurger" class="button subdued small" disabled>↶ UNDO</button><button id="trashBurger" class="button subdued small" disabled>× DISCARD</button></div></div></div></div>
+     <div class="explode-bar"><label for="explodeRange">EXPLODE BURGER <b id="explodePercent">0%</b></label><input id="explodeRange" aria-label="Separate the 3D burger layers" type="range" min="0" max="100" step="1" value="0"><p id="labMessage">DRAG TO ORBIT · PINCH TO ZOOM · SEPARATE EVERY INGREDIENT</p><div class="simulation-tools"><button type="button" id="jiggleBurger" class="button subdued small">SHAKE / PHYSICS TEST</button><button type="button" id="photoButton" class="button subdued small">CAPTURE PHOTO</button><span>DRAG FOOD ONTO THE PLATE · FALLING LAYERS · GRAVITY · FRICTION</span></div></div><div id="layerInspector" class="layer-inspector" aria-label="Select burger ingredient layer"></div>
+     <div class="progress-caption" id="orderHint">Pick a customer ticket, prepare their ingredients, then serve.</div>
+    </section>
+
+    <section class="station toppings-station"><div class="station-heading"><div><span class="eyebrow">STATION 03 / THE FLAVOR</span><h2>THE TOPPING BAR</h2></div><span class="small-note">TAP OR DRAG ONTO 3D PLATE</span></div><div id="ingredientBar" class="ingredient-grid"></div></section>
+   </main>
+
+   <aside class="panel manage-panel" id="businessPanel"><button id="hudClose" class="hud-close" type="button">× CLOSE OFFICE</button>
+    <div class="panel-heading"><div><span class="eyebrow">BUILD YOUR EMPIRE</span><h2>THE BACK OFFICE</h2></div></div>
+    <div class="tabs" role="tablist" aria-label="Management pages"><button role="tab" data-tab="supplies" aria-selected="true">STOCK</button><button role="tab" data-tab="empire" aria-selected="false">EMPIRE</button><button role="tab" data-tab="upgrades" aria-selected="false">UPGRADES</button><button role="tab" data-tab="ledger" aria-selected="false">LEDGER</button></div>
+    <div id="manageContent" class="manage-content"></div>
+   </aside>
+  </div>
+  <aside class="live-ticket" id="liveTicket" aria-label="Current customer recipe">
+    <div class="live-ticket-head"><span class="live-ticket-eyebrow" id="liveTicketLabel">LIVE PREP TICKET</span><button class="live-ticket-next" id="ticketNext" type="button" title="Switch to next order" aria-label="Switch to the next customer ticket">NEXT TICKET ›</button></div>
+    <div class="live-ticket-main"><strong id="liveTicketName">OPEN FOR BUSINESS</strong><span id="liveTicketTimer">—</span></div>
+    <div class="live-ticket-chips" id="liveTicketChips">Start a shift to get your first order.</div>
+    <div class="live-ticket-bottom"><span id="liveTicketProgress" role="progressbar" aria-label="Burger recipe completion" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><i id="liveTicketBar"></i></span><small id="liveTicketAction">Your next customer is waiting.</small></div>
+  </aside>
+  <div class="update-banner" id="updateBanner" role="status" aria-live="polite" hidden><strong>A new Burger Quest build is ready.</strong><button type="button" id="applyUpdate">SAVE & RELOAD</button><button type="button" id="dismissUpdate" aria-label="Dismiss update notice">×</button></div>
+  <div class="sale-burst" id="saleBurst" role="status" aria-live="polite" aria-atomic="true" hidden><strong id="saleBurstAmount">+$0</strong><span id="saleBurstDetail">ORDER COMPLETE</span></div>
+  <div class="hud-signal" id="hudSignal" aria-live="off">LOADING RESTAURANT SYSTEMS</div>
+  <nav class="hud-controls" aria-label="Restaurant game controls">
+    <div id="hudActions" class="hud-actions" aria-label="Main cooking controls"></div>
+    <div class="hud-tools" aria-label="HUD panels">
+      <button class="hud-tool" type="button" data-hud-toggle="orders" aria-pressed="true" aria-label="Toggle orders">▤<span>ORDERS</span></button>
+      <button class="hud-tool" type="button" data-hud-toggle="grill" aria-pressed="true" aria-label="Toggle grill">♨<span>GRILL</span></button>
+      <button class="hud-tool" type="button" data-hud-toggle="manage" aria-pressed="false" aria-label="Open stock and empire office">▣<span>OFFICE</span></button>
+      <button class="hud-tool" type="button" data-hud-toggle="inspector" aria-pressed="false" aria-label="Inspect burger layers">≡<span>LAYERS</span></button>
+      <button class="hud-tool" type="button" id="hudGraphics" aria-label="Change graphics quality">✦<span>FX</span></button>
+    </div>
+  </nav>
+  <footer class="footer"><span>BURGER QUEST <b>PUBLIC RELEASE 6.0</b> · OFFLINE SINGLE-PLAYER TYCOON</span><span id="saveIndicator">SAVED LOCALLY</span></footer>
+ </div>
+ <section id="splashScreen" role="dialog" aria-modal="true" aria-labelledby="splashHeading">
+    <div class="splash-inner">
+      <span class="splash-kicker">THE RESTAURANT EMPIRE SIMULATOR</span>
+      <h1 id="splashHeading" class="splash-title">BURGER <span>QUEST</span></h1>
+      <div class="splash-burger" aria-hidden="true"><i class="splash-bun-top"></i><i class="splash-lettuce"></i><i class="splash-cheese"></i><i class="splash-patty"></i><i class="splash-bun-bottom"></i></div>
+      <p class="splash-caption">Fire up the griddle. Stack real 3D ingredients. Feed the crowd. Own the block, then the whole city.</p>
+      <div class="splash-progress"><i id="splashProgressBar"></i></div><div id="splashStatus" class="splash-status">INITIALIZING KITCHEN…</div>
+      <div class="splash-buttons"><button class="button primary" id="enterGame" type="button" disabled>ENTER THE KITCHEN</button><button class="button subdued" id="splashHelp" type="button">HOW TO PLAY</button></div>
+      <div class="splash-features"><span id="deviceReadout">AUTO-DETECTING DEVICE</span><span>TOUCH + MOUSE + KEYBOARD</span><span>LOCAL SAVES</span></div>
+    </div>
+  </section>
+ <div id="toastRegion" class="toast-region" aria-live="polite" aria-atomic="true"></div>
+ <div id="modalRoot" class="modal-root" hidden></div>
+ <input id="importInput" type="file" accept="application/json,.json" hidden>
+</body>
+</html>

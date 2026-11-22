@@ -1,0 +1,34 @@
+{
+  "name": "Burger Quest: Restaurant Empire",
+  "short_name": "Burger Quest",
+  "description": "Play a textured 3D burger restaurant tycoon: cook orders, drag food, earn tips and grow five burger stands. Runs on mobile and desktop.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#130f12",
+  "theme_color": "#1b1515",
+  "icons": [
+    {
+      "src": "assets/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "assets/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "id": "./",
+  "display_override": [
+    "standalone",
+    "minimal-ui"
+  ],
+  "categories": [
+    "games",
+    "entertainment"
+  ]
+}
